@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<meta name="google-site-verification" content="rAz6os48vxlwYdDyq6kSFFC9E775vsN1-9keVkCGB8g" />
+	<title>[F76 Map][by Farget][for Players] Интерактивная карта Fallout 76</title>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="css/favicons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="css/favicons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="css/favicons/favicon-16x16.png">
+	<link rel="manifest" href="css/favicons/site.webmanifest">
+	<link rel="mask-icon" href="css/favicons/safari-pinned-tab.svg" color="#5bbad5">
+	<link rel="shortcut icon" href="css/favicons/favicon.ico">
+	<meta name="msapplication-TileColor" content="#da532c">
+	<meta name="msapplication-config" content="css/favicons/browserconfig.xml">
+	<meta name="theme-color" content="#ffffff">
+
+	<meta name="description" content="Интерактивная карта по игре Fallout 76. Есть локации, растения, месторождения, журналы, пупсы, верстаки и многое другое.">
+	<meta name="keywords" content="Fallout 76 map, F76 map, Fallout 76 карта, Fallout 76 интерактивная карта, Fallout 76 локации, Fallout 76 ресурсы, Fallout 76 координаты, Fallout 76 сокровища, Fallout 76 случайные встречи, Fallout 76 журналы, Fallout 76 пупсы, Fallout 76 растения">
+	<link rel="canonical" href="https://f76map.ru"/>
+	
+	<meta property="og:title" content="[F76 Map][by Farget][for Players] Интерактивная карта Fallout 76"/>
+	<meta property="og:image" content="https://f76map.ru/css/images/preview.jpg"/>
+	<meta property="og:url" content="https://f76map.ru"/>
+	<meta property="og:description" content="Интерактивная карта по игре Fallout 76. Есть локации, сокровища, места случайных встреч, месторождения, журналы, пупсы, тайники с крышками, верстаки, растения, а так же поиск точек по вашим введенным координатам."/>
+	<meta property="og:type" content="website"/>
+	
+	<link rel="stylesheet" href="css/leaflet.css" />
+	<script src="scripts/leaflet.js"></script>
+	<link rel="stylesheet" href="css/switchbutton.css" />
+	<script src="scripts/jquery-3.4.0.min.js"></script>
+	<script src="scripts/jquery-ui.min.js"></script>
+	<script src="scripts/leaflet-search.js"></script>
+	<link rel="stylesheet" href="css/leaflet-search.css" />
+
+	<script src="scripts/clipboard.min.js"></script>
+	
+	<script src="scripts/menu.js"></script>
+	<link rel="stylesheet" href="css/menu-style.css">
+	
+	<link rel="stylesheet" href="css/normalize.min.css">
+	<link rel="stylesheet" href="css/font-awesome.css">
+
+	<script type="text/javascript" src="scripts/jquery.fancybox.pack.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/jquery.fancybox.css"/>
+	
+	<!-- <script src="script_new_year.js" defer></script> -->
+	<!-- <link rel="stylesheet" href="style_new_year.css"> -->
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-138965528-2"></script>
+	<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+
+	gtag('config', 'UA-138965528-2');
+	</script>
+	
+	<!-- Yandex.Metrika counter -->
+	<script type="text/javascript" >
+	(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+	m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+	(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+	ym(53445217, "init", {
+		clickmap:true,
+		trackLinks:true,
+		accurateTrackBounce:true
+	});
+	</script>
+	<noscript><div><img src="https://mc.yandex.ru/watch/53445217" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+	<!-- /Yandex.Metrika counter -->
+
+ <style>
+		@font-face {font-family: LemonMilkRus; src: url(fonts/LemonMilkRus.otf);}
+		@font-face {font-family: PTSerifRegular; src: url(fonts/PTSerifRegular.ttf);}
+		@font-face {font-family: PTSerifBold; src: url(fonts/PTSerifBold.ttf);}
+		@font-face {font-family: RobotoCondensed-Bold; src: url(fonts/RobotoCondensed-Bold.ttf);}
+		@font-face {font-family: RobotoCondensed-Light; src: url(fonts/RobotoCondensed-Light.ttf);}
+		@font-face {font-family: RobotoCondensed-Regular; src: url(fonts/RobotoCondensed-Regular.ttf);}
+		html, body {width: 100%; height: 100%; margin: 0;}
+		p {text-indent: 25px; margin-top: 10px; margin-bottom: 10px;}
+		#map {
+			background-color: #3c3c3c;
+			background-image: url('bg3.jpg');
+			width: 100%;
+			height: 100%;
+			/* background-position-x: center; */
+			/* background-size: cover; */
+		}
+		#sidebar {
+			position: absolute;
+			bottom: 0px;
+			left: -453px;
+			width: 431px;
+			height: auto;
+			margin: auto 0px 5px 0px;
+			background-color:#FFFFFF;
+			z-index: 400;
+			opacity: 0.87;
+			transition: all 0.5s ease-in-out;
+			-webkit-transition: all 0.5s ease-in-out;
+			-moz-transition: all 0.5s ease-in-out;
+			-o-transition: all 0.5s ease-in-out;
+			border-radius:0px 7px 7px 0px;
+			border:1px solid #3c3c3c;
+			padding: 215px 0 0 0;
+		}
+		#sidebarbutton {
+			position: absolute;
+			left: 462px;
+			bottom: 43px;
+			z-index: 801;
+			transition: all 0.5s ease-in-out;
+		}
+		#sb0 {
+			width: 30px;
+			height: 126px;
+			background-color: RGB(255, 255, 255);
+			border-radius:7px;
+			border:1px solid #3c3c3c;
+			box-shadow: 0 0 5px #bbb;
+			padding: 0;
+			cursor:pointer;
+			-webkit-transition: all 0.4s ease-in-out;
+			transition: all 0.4s ease-in-out;
+		}
+		#sb0:hover {background: rgb(255, 200, 0);}
+		#one {
+			position: relative;
+			bottom: 210px;
+			left: 10px;
+			font-family: LemonMilkRus;
+		}
+		#allcheckbox{position: absolute; bottom: 172px; left: 10px;}
+		#allcheckbox2{position: absolute; bottom: 172px; left: 219px;}
+		.allcheckboxbut {
+			height: 35px;
+			width: 206px;
+			background-color:#FFFFFF;
+			border-radius:7px;
+			border:1px solid #3c3c3c;
+			box-shadow: 0 0 5px #bbb;
+			font-family: LemonMilkRus;
+			font-size: 9pt;
+			cursor:pointer;
+			white-space: normal;
+			-webkit-transition: all 0.4s ease-in-out;
+			transition: all 0.4s ease-in-out;
+		}
+		.allcheckboxbut:hover {background: rgb(255, 200, 0);}
+		#pkm {
+			position: absolute;
+			bottom: 145px;
+			left: 10px;
+			width: 267px;
+			height: 22px;
+			border-radius: 7px;
+			border: 1px solid #3c3c3c;
+			font-family: LemonMilkRus;
+			font-size: 9pt;
+			text-align: center;
+			line-height: 22px;
+		}
+		#changemap {
+			position: absolute;
+			width: 260px;
+			height: 87px;
+			left: 10px;
+			bottom: 43px;
+			z-index: 99999;
+			background-color: #FFFFFF;
+			padding: 5px 2px 5px 5px;
+			box-shadow: 0 0 5px #bbb;
+			border-radius:7px;
+			border:1px solid #3c3c3c;
+			font-family: LemonMilkRus;
+			font-size: 10pt;
+		}
+		.image_map {
+			width: 28px;
+			height: 28px;
+			border-radius:7px;
+			border:1px solid #3c3c3c;
+			font-weight: bolder;
+			font-size: 12pt;
+			cursor:pointer;
+			-webkit-transition: all 0.4s ease-in-out;
+			transition: all 0.4s ease-in-out;
+			background: #FFFFFF;
+			color: #000000;
+			font-family: 'Arial';
+			margin: 0 10px 2px 5px;
+		}
+		.image_map:hover {background: rgb(255, 200, 0) !important;}
+		.selected_map {background: #3c3c3c; color: #FFFFFF;}
+		.mapinfo {position: absolute; bottom: 109px; left: 282px;}
+		#mapinfoid {
+			display: block;
+			width: 102px;
+			height: 52px;
+			background-color:#FFFFFF;
+			border-radius:7px;
+			border:1px solid #3c3c3c;
+			box-shadow: 0 0 5px #bbb;
+			padding: 3px;
+			cursor:pointer;
+			text-align: center;
+			-webkit-transition: all 0.4s ease-in-out;
+			transition: all 0.4s ease-in-out;
+		}
+		#mapinfoid:hover {background: rgb(255, 200, 0);}
+		#discord_f76hub {position: absolute; bottom: 39px; left: 282px;}
+		#f76hub {
+			width: 88px;
+			background-color:#FFFFFF;
+			border-radius:7px;
+			border:1px solid #3c3c3c;
+			box-shadow: 0 0 5px #bbb;
+			padding: 7px 10px 3px 10px;
+			cursor:pointer;
+			-webkit-transition: all 0.4s ease-in-out;
+			transition: all 0.4s ease-in-out;
+		}
+		#f76hub:hover {background: rgb(255, 200, 0);}
+		#coords_fullbox {
+			position: absolute;
+			left: 430px;
+			bottom: 0px;
+			width: 650px;
+			height: 195px;
+			background-color: #3c3c3c;
+			margin: 5px;
+			opacity: 0.87;
+			z-index: 401;
+			border-radius: 7px;
+			border: 1px solid #3c3c3c;
+			cursor: move;
+			display: none;
+		}
+		#coords_box {
+			position: absolute;
+			bottom: 5px;
+			left: 10px;
+			height: 35px;
+			width: 415px;
+			background-color:#FFFFFF;
+			border-radius:7px;
+			border:1px solid #3c3c3c;
+			box-shadow: 0 0 5px #bbb;
+			font-family: LemonMilkRus;
+			font-size: 9pt;
+			cursor:pointer;
+			white-space: normal;
+			-webkit-transition: all 0.4s ease-in-out;
+			transition: all 0.4s ease-in-out;
+		}
+		#coords_fullbox2 {
+			position: absolute;
+			top: 30px;
+			width: 650px;
+			height: 165px;
+			background-color: #ffffff;
+			border-radius: 0 0 7px 7px;
+			cursor: default;
+		}
+		#coords_box:hover {background: rgb(255, 200, 0);}
+		#searchX, #searchY {
+			position: absolute;
+			right: 475px;
+			font-size: 12pt;
+			font-family: LemonMilkRus;
+		}
+		#searchX {top: 3px;}
+		#searchY {top: 33px;}
+		#searchB1, #searchB2, #searchB3 {position: absolute; left: 28px;}
+		#searchB1 {top: 63px;}
+		#searchB2 {top: 93px;}
+		#searchB3 {top: 133px;}
+		#lng, #lat {
+			width: 125px;
+			height: 25px;
+			border:1px solid #3c3c3c;
+			border-radius: 5px;
+			padding: 0 10px;
+			font-size: 12pt;
+		}
+		#b1, #b2, #b3 {
+			height: 27px;
+			width: 147px;
+			border-radius:7px;
+			border:1px solid #3c3c3c;
+			cursor:pointer;
+			background-color:#FFFFFF;
+			font-family: LemonMilkRus;
+			font-size: 8pt;
+			-webkit-transition: all 0.4s ease-in-out;
+			transition: all 0.4s ease-in-out;
+		}
+		#b2 {height: 37px;}
+		#b1:hover, #b2:hover, #b3:hover {background: rgb(255, 200, 0);}
+		#coords {position: absolute; top: 60px; left: 505px; width: 70px; height: 55px; border-radius:7px; border:1px solid #3c3c3c; background-color: #FFFFFF; cursor: pointer; font-family: LemonMilkRus; font-size: 8pt; -webkit-transition: all 0.4s ease-in-out; transition: all 0.4s ease-in-out;}
+		#coords:hover {background: rgb(255, 200, 0);}
+		#coords_del {position: absolute; top: 120px; left: 505px; width: 70px; height: 40px; border-radius:7px; border:1px solid #3c3c3c; background-color: #FFFFFF; cursor: pointer; font-family: LemonMilkRus; font-size: 8pt; -webkit-transition: all 0.4s ease-in-out; transition: all 0.4s ease-in-out;}
+		#coords_del:hover {background: rgb(255, 200, 0);}
+		#coords_icon1 {position: absolute; top: 85px; left: 585px;}
+		#coords_icon2 {position: absolute; top: 130px; left: 585px;}
+		#coords_close {position: absolute; right: 10px; top: -27px; font-size: 14pt; cursor: pointer; color: #ffffff; font-family: RobotoCondensed-Regular; -webkit-transition: all 0.4s ease-in-out; transition: all 0.4s ease-in-out;}
+		#coords_close:hover {color: rgb(255, 200, 0) !important;}
+		
+		.switch {z-index: 2;}
+		.text {position: absolute; z-index: 2; font-family: LemonMilkRus; font-size: 9pt;}
+/*Основное*/
+		#text1 {top: 10px; left: 30px;} /*Локации*/
+		#text2 {top: 33px; left: 30px;} /*Сокровища*/
+		#text3 {top: 56px; left: 30px;} /*Журналы*/
+		#text4 {top: 10px; left: 215px;} /*Пупсы*/
+		#text5 {top: 33px; left: 215px;} /*Тайники с крышками*/
+		#text6 {top: 79px; left: 30px;} /*Силовая броня*/
+		#text7 {top: 79px; left: 215px;} /*Ядерный блок*/
+		
+		#switch1 {top: 6px; left: 145px;}
+		#switch2 {top: 29px; left: 145px;}
+		#switch3 {top: 52px; left: 145px;}
+		#switch4 {top: 6px; left: 368px;}
+		#switch5 {top: 29px; left: 368px;}
+		#switch6 {top: 75px; left: 145px;}
+		#switch7 {top: 75px; left: 368px;}
+		
+		#url1_1 {position: absolute; top: 33px; left: 10px;}
+		#url1_2 {position: absolute; top: 56px; left: 10px;}
+		#url1_3 {position: absolute; top: 10px; left: 195px;}
+		#url1_4 {position: absolute; top: 33px; left: 195px;}
+		#url1_5 {position: absolute; top: 79px; left: 10px;}
+		#url1_6 {position: absolute; top: 79px; left: 195px;}
+		
+		
+/*Верстаки*/
+		#wb_text1 {top: 10px; left: 30px;} /*Оружейный верстак*/
+		#wb_text2 {top: 33px; left: 30px;} /*Верстак для брони*/
+		#wb_text3 {top: 56px; left: 30px;} /*Ремонтный верстак*/
+		#wb_text4 {top: 79px; left: 30px;} /*Химлаборатория*/
+		#wb_text5 {top: 102px; left: 30px;} /*Пункт обслуживания силовой брони*/
+		
+		#wb_switch1 {top: 6px; left: 300px;}
+		#wb_switch2 {top: 29px; left: 300px;}
+		#wb_switch3 {top: 52px; left: 300px;}
+		#wb_switch4 {top: 75px; left: 300px;}
+		#wb_switch5 {top: 98px; left: 300px;}
+		
+		#wb_url_1 {position: absolute; top: 10px; left: 10px;}
+		#wb_url_2 {position: absolute; top: 33px; left: 10px;}
+		#wb_url_3 {position: absolute; top: 56px; left: 10px;}
+		#wb_url_4 {position: absolute; top: 79px; left: 10px;}
+		#wb_url_5 {position: absolute; top: 102px; left: 10px;}
+/*Случайные встречи*/
+		#re_text1 {top: 10px; left: 50px;} /*Assault*/
+		#re_text2 {top: 10px; left: 200px;} /*Object*/
+		#re_text3 {top: 33px; left: 50px;} /*Scene*/
+		#re_text4 {top: 33px; left: 200px;} /*Travel*/
+		#re_text5 {top: 56px; left: 50px;} /*Camp*/
+		#re_text6 {top: 56px; left: 200px;} /*Mining*/
+		
+		#re_switch1 {top: 6px; left: 110px;}
+		#re_switch2 {top: 6px; left: 255px;}
+		#re_switch3 {top: 29px; left: 110px;}
+		#re_switch4 {top: 29px; left: 255px;}
+		#re_switch5 {top: 52px; left: 110px;}
+		#re_switch6 {top: 52px; left: 255px;}
+		
+		#re_url_1 {position: absolute; top: 10px; left: 30px;}
+		#re_url_2 {position: absolute; top: 10px; left: 180px;}
+		#re_url_3 {position: absolute; top: 33px; left: 30px;}
+		#re_url_4 {position: absolute; top: 33px; left: 180px;}
+		#re_url_5 {position: absolute; top: 56px; left: 30px;}
+		#re_url_6 {position: absolute; top: 56px; left: 180px;}
+		
+		.re_info {position: absolute; top: 21px; left: 335px; z-index: 2;}
+/*Монстры и животные*/
+		#strangemobs_text {position: absolute; top: 10px; left: 50px; text-align: center;}
+		#strangemobs_switch {top: 14px; left: 350px;}
+		#url5 {position: absolute; top: 18px; left: 25px;}
+		
+		#animals1_text {position: absolute; top: 50px; left: 45px; text-align: center;}
+		#animals1_1_text {position: absolute; top: 73px; left: 50px; text-align: center;}
+		#animals1_2_text {position: absolute; top: 96px; left: 50px; text-align: center;}
+		#animals1_3_text {position: absolute; top: 119px; left: 50px; text-align: center;}
+		#animals1_4_text {position: absolute; top: 142px; left: 50px; text-align: center;}
+		#animals1_5_text {position: absolute; top: 165px; left: 50px; text-align: center;}
+		#animals1_6_text {position: absolute; top: 73px; left: 240px; text-align: center;}
+		#animals1_7_text {position: absolute; top: 96px; left: 240px; text-align: center;}
+		#animals1_8_text {position: absolute; top: 119px; left: 240px; text-align: center;}
+		#animals1_9_text {position: absolute; top: 142px; left: 240px; text-align: center;}
+		#animals1_10_text {position: absolute; top: 165px; left: 240px; text-align: center;}
+		#animals1_1_switch {top: 69px; left: 140px;}
+		#animals1_2_switch {top: 92px; left: 140px;}
+		#animals1_3_switch {top: 115px; left: 140px;}
+		#animals1_4_switch {top: 138px; left: 140px;}
+		#animals1_5_switch {top: 161px; left: 140px;}
+		#animals1_6_switch {top: 69px; left: 330px;}
+		#animals1_7_switch {top: 92px; left: 330px;}
+		#animals1_8_switch {top: 115px; left: 330px;}
+		#animals1_9_switch {top: 138px; left: 330px;}
+		#animals1_10_switch {top: 161px; left: 330px;}
+		#animals1_1_url {position: absolute; top: 73px; left: 30px;}
+		#animals1_2_url {position: absolute; top: 96px; left: 30px;}
+		#animals1_3_url {position: absolute; top: 119px; left: 30px;}
+		#animals1_4_url {position: absolute; top: 142px; left: 30px;}
+		#animals1_5_url {position: absolute; top: 165px; left: 30px;}
+		#animals1_6_url {position: absolute; top: 73px; left: 220px;}
+		#animals1_7_url {position: absolute; top: 96px; left: 220px;}
+		#animals1_8_url {position: absolute; top: 119px; left: 220px;}
+		#animals1_9_url {position: absolute; top: 142px; left: 220px;}
+		#animals1_10_url {position: absolute; top: 165px; left: 220px;}
+		
+		#animals2_text {position: absolute; top: 193px; left: 111px; text-align: center;}
+		#animals2_1_text {position: absolute; top: 216px; left: 50px; text-align: center;}
+		#animals2_2_text {position: absolute; top: 239px; left: 50px; text-align: center;}
+		#animals2_3_text {position: absolute; top: 262px; left: 50px; text-align: center;}
+		#animals2_4_text {position: absolute; top: 285px; left: 50px; text-align: center;}
+		#animals2_5_text {position: absolute; top: 308px; left: 50px; text-align: center;}
+		#animals2_6_text {position: absolute; top: 331px; left: 50px; text-align: center;}
+		#animals2_7_text {position: absolute; top: 216px; left: 240px; text-align: center;}
+		#animals2_8_text {position: absolute; top: 239px; left: 240px; text-align: center;}
+		#animals2_9_text {position: absolute; top: 262px; left: 240px; text-align: center;}
+		#animals2_10_text {position: absolute; top: 285px; left: 240px; text-align: center;}
+		#animals2_11_text {position: absolute; top: 308px; left: 240px; text-align: center;}
+		#animals2_1_switch {top: 212px; left: 140px;}
+		#animals2_2_switch {top: 235px; left: 140px;}
+		#animals2_3_switch {top: 258px; left: 140px;}
+		#animals2_4_switch {top: 281px; left: 140px;}
+		#animals2_5_switch {top: 304px; left: 140px;}
+		#animals2_6_switch {top: 327px; left: 140px;}
+		#animals2_7_switch {top: 212px; left: 330px;}
+		#animals2_8_switch {top: 235px; left: 330px;}
+		#animals2_9_switch {top: 258px; left: 330px;}
+		#animals2_10_switch {top: 281px; left: 330px;}
+		#animals2_11_switch {top: 304px; left: 330px;}
+		#animals2_1_url {position: absolute; top: 216px; left: 30px;}
+		#animals2_2_url {position: absolute; top: 239px; left: 30px;}
+		#animals2_3_url {position: absolute; top: 262px; left: 30px;}
+		#animals2_4_url {position: absolute; top: 285px; left: 30px;}
+		#animals2_5_url {position: absolute; top: 308px; left: 30px;}
+		#animals2_6_url {position: absolute; top: 331px; left: 30px;}
+		#animals2_7_url {position: absolute; top: 216px; left: 220px;}
+		#animals2_8_url {position: absolute; top: 239px; left: 220px;}
+		#animals2_9_url {position: absolute; top: 262px; left: 220px;}
+		#animals2_10_url {position: absolute; top: 285px; left: 220px;}
+		#animals2_11_url {position: absolute; top: 308px; left: 220px;}	
+/*Месторождения*/
+		#de_l {position: absolute; left: 25px; margin-top: 5px;}
+		#de_r {position: absolute; left: 190px; margin-top: 5px;}
+		.deposit {height: 20px; line-height: 20px; padding-bottom: 3px;}
+		.de_t {position: relative; height: 13px; padding-right: 15px; font-size: 9pt; font-family: LemonMilkRus;}
+/*Рудные жилы*/
+		#ve_l {position: absolute; left: 10px; margin-top: 5px;}
+		#ve_r {position: absolute; left: 230px; margin-top: 5px;}
+		.vein {height: 20px; line-height: 20px; padding-bottom: 3px;}
+		.ve_t {position: relative; height: 13px; padding-right: 5px; font-size: 9pt; font-family: LemonMilkRus;}
+/*Растения*/
+		#pl_l {position: absolute; left: 10px; margin-top: 5px;}
+		#pl_r {position: absolute; left: 165px; margin-top: 5px;}
+		.plant {height: 20px; line-height: 20px; padding-bottom: 3px;}
+		.pl_t {position: relative; height: 13px; padding-right: 5px; font-size: 9pt; font-family: LemonMilkRus;}
+/*Хлам*/
+		#hlam_filter_select {position: absolute; top: 10px; left: 10px; height: 30px; width: 370px; text-align: center; font-family: LemonMilkRus; font-size: 10pt; text-align-last: center;}
+		.hlam_text {position: relative; height: 13px; margin-top: 10px; font-size: 9pt;}
+		#box_h {position: absolute; width: 325px; height: 100%; top: 42px; left: 65px;}
+		#box_h_b {position: absolute; width: 36px; height: 100%; top: 42px; left: 20px;}
+		.b_url_hlam {position: relative; top: 43px; height: 15px; margin-top: 8px;}
+		#hlam_t_273, #hlam_t_274, #hlam_t_275, #hlam_t_276, #hlam_t_277, #hlam_t_278, #hlam_t_279, #hlam_t_280, #hlam_t_281 {font-size: 8pt;}
+		.switch2 {position: relative; top: 3px; margin-top: 3px;}
+		.emptybox2 {position: relative; height: 10px; width: 100%;}
+/*Разное*/
+		.misc_text {position: absolute; left: 30px; top: 10px; font-size: 9pt;}
+		#misk_switch {position: absolute; left: 170px; top: 6px;}
+		#url_m_1 {position: absolute; top: 10px; left: 10px;}
+/*-----*/
+		.fancybox-custom .fancybox-skin {box-shadow: 0 0 50px #222;}
+		.b_url_i {width: 15px; height: 15px;}
+		.b_url2 {position: relative; top: 1px; display: inline-block; margin-right: 8px;}
+		.popupbutton {
+			font-family: RobotoCondensed-Regular;
+			font-size: 14px;
+			line-height: 14px;
+			height: 23px;
+			width: 60px;
+			border-radius: 10px;
+			border: 2px solid #999;
+			padding: 0px 0px 3px 0px;
+			cursor: pointer;
+			position: relative;
+			left: 2px;
+		}
+		#popupbuttondel:hover {border: 2px solid red;}
+		#popupbuttonlink:hover {border: 2px solid rgb(255, 200, 0);}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script type="application/javascript">
+	var bounds = [[-290730,-291730], [292230,291255]];
+	var map = new L.map('map', {
+		crs: L.CRS.Simple,
+		minZoom: -10,
+		maxZoom: -4,
+		maxBoundsViscosity: 0.5,
+		maxBounds: [
+			[-700000, 700000],
+			[700000, -700000]
+		],
+	});
+	var image = L.imageOverlay('css/images/map1.jpg', bounds).addTo(map);
+	map.fitBounds(bounds);
+	map.setZoom(-9);
+	map.zoomControl.setPosition('topright');
+	var allmarkers = L.layerGroup().addTo(map);
+	var markers = []
+	function createMarker(coords, op) {
+		if (coords[0]<=290000 && coords[0]>=-290000 && coords[1]<=290000 && coords[1]>=-290000){
+			var id
+			if (markers.length < 1) id = 0
+			else id = markers[markers.length - 1]._id + 1
+			var popupContent =
+			"X: " + coords[1] + "<br>Y: "  + coords[0] +
+			"<br><button class='popupbutton b_url' id='popupbuttonlink' data-clipboard-text='https://f76map.ru#y="+coords[0]+"&x="+coords[1]+"' title='Скопировать ссылку'>ссылка</button>" +
+			"<br><button class='popupbutton b_url' id='popupbuttondel' onclick='clearMarker(" + id + ")' title='Удалить маркер'>удалить</button>";
+			var myMarker = L.marker(coords, {
+				draggable: false,
+				pane: "top"
+			}).addTo(allmarkers);
+			myMarker._id = id
+			if (op == 1){var myPopup = myMarker.bindPopup(popupContent).openPopup();}
+			else {var myPopup = myMarker.bindPopup(popupContent);}
+			map.addLayer(myMarker)
+			markers.push(myMarker)
+		}
+	}
+	function clearMarker(id) {
+		console.log(markers)
+		var new_markers = []
+		markers.forEach(function(marker) {
+			if (marker._id == id) map.removeLayer(marker)
+			else new_markers.push(marker)
+		})
+		markers = new_markers
+	}
+	function but1() {
+	allmarkers.clearLayers();
+	var lat = document.getElementById("lat").value;
+	var lng = document.getElementById("lng").value;
+	createMarker([lat, lng],[1]);
+	map.panTo([lat, lng]);
+	};
+	function but2() {
+	var lat = document.getElementById("lat").value;
+	var lng = document.getElementById("lng").value;
+	createMarker([lat, lng],[1]);
+	map.panTo([lat, lng]);
+	};
+	function but3() {
+	allmarkers.clearLayers();
+	};
+	map.on('contextmenu',function(e){
+		createMarker([e.latlng.lat, e.latlng.lng])
+	});
+	map.createPane("top");
+	map.getPane("top").style.zIndex = 999;
+	function f_sb0() {
+	var sidebarmove = document.getElementById('sidebar');
+	if (sidebarmove.style.left == '0px'){
+	sidebarmove.style.left = '-453px';
+	sidebarmove.style["box-shadow"] = 'none';
+	sidebarbutton.style.left = '462px';
+	sb0.value = '►';}
+	else {
+	sidebarmove.style.left = '0px';
+	sidebarmove.style["box-shadow"] = '0 0 5px #bbb';
+	sidebarbutton.style.left = '396px';
+	sb0.value = '◄';}
+	};
+	function AllCheckboxOff(){
+	$('input[type="checkbox"]:checked').prop('checked',false);
+	allicons.clearLayers();
+	map.removeControl( controlSearch );
+	AllCheckboxOff2();
+	}
+	function AllCheckboxOff2(){
+	$('input[type="checkbox"]:checked:not(#LocationsButton)').prop('checked',false);
+	bobbleheadicons.clearLayers();
+	treasureicons.clearLayers();
+	capstashicons.clearLayers();
+	magazineicons.clearLayers();
+	fusioncoreicons.clearLayers();
+	powerarmoricons.clearLayers();
+	wb1icons.clearLayers(); wb2icons.clearLayers(); wb3icons.clearLayers(); wb4icons.clearLayers(); wb5icons.clearLayers();
+	reassaulticons.clearLayers(); reobjecticons.clearLayers(); resceneicons.clearLayers(); retravelicons.clearLayers(); recampicons.clearLayers(); reminingicons.clearLayers();
+	strangemobsicons.clearLayers();
+	anim1_1icons.clearLayers(); anim1_2icons.clearLayers(); anim1_3icons.clearLayers(); anim1_4icons.clearLayers(); anim1_5icons.clearLayers(); anim1_6icons.clearLayers(); anim1_7icons.clearLayers(); anim1_8icons.clearLayers(); anim1_9icons.clearLayers(); anim1_10icons.clearLayers();
+	anim2_1icons.clearLayers(); anim2_2icons.clearLayers(); anim2_3icons.clearLayers(); anim2_4icons.clearLayers(); anim2_5icons.clearLayers(); anim2_6icons.clearLayers(); anim2_7icons.clearLayers(); anim2_8icons.clearLayers(); anim2_9icons.clearLayers(); anim2_10icons.clearLayers(); anim2_11icons.clearLayers();
+	aluminiyicons.clearLayers();
+	betonicons.clearLayers();
+	chorniytitanicons.clearLayers();
+	hlamicons.clearLayers();
+	jelezoicons.clearLayers();
+	kislotaicons.clearLayers();
+	kristalliicons.clearLayers();
+	masloicons.clearLayers();
+	medyicons.clearLayers();
+	serebroicons.clearLayers();
+	svinecicons.clearLayers();
+	udobrenieicons.clearLayers();
+	ugolyicons.clearLayers();
+	zolotoicons.clearLayers();
+	yaderniymaterialicons.clearLayers();
+	gribicons.clearLayers();
+	arbuzicons.clearLayers();
+	astraicons.clearLayers();
+	toshkaicons.clearLayers();
+	tyikvaicons.clearLayers();
+	tyikva2icons.clearLayers();
+	klukvaicons.clearLayers();
+	morkovyicons.clearLayers();
+	ejevikaicons.clearLayers();
+	kukuruzaicons.clearLayers();
+	lihocveticons.clearLayers();
+	ilofasolyicons.clearLayers();
+	krovolisticons.clearLayers();
+	mozgogribicons.clearLayers();
+	mutafrukticons.clearLayers();
+	peplocveticons.clearLayers();
+	smolyanikaicons.clearLayers();
+	hvostolomicons.clearLayers();
+	britvozlakicons.clearLayers();
+	gryaznocveticons.clearLayers();
+	rododendronicons.clearLayers();
+	chertopolohicons.clearLayers();
+	nochnoypolzunicons.clearLayers();
+	nutryanoygribicons.clearLayers();
+	ognenniygribicons.clearLayers();
+	yaycomolerotaicons.clearLayers();
+	pepelynayarozaicons.clearLayers();
+	yagodahlopushkaicons.clearLayers();
+	korenyjenyshenyaicons.clearLayers();
+	svetgribicons.clearLayers();
+	cvetokdushitelyaicons.clearLayers();
+	svetsmolaicons.clearLayers();
+	zarajklukvaicons.clearLayers();
+	paporotnikicons.clearLayers();
+	kizilicons.clearLayers();
+	cvetoktoshkiicons.clearLayers();
+	cvetoktyikvyiicons.clearLayers();
+	cvetokarbuzaicons.clearLayers();
+	cvetokmorkoviicons.clearLayers();
+	hischnolisticons.clearLayers();
+	HlamOff();
+	vein1icons.clearLayers(); vein2icons.clearLayers(); vein3icons.clearLayers(); vein4icons.clearLayers(); vein5icons.clearLayers(); vein6icons.clearLayers(); vein7icons.clearLayers(); vein8icons.clearLayers(); vein9icons.clearLayers(); vein10icons.clearLayers(); vein11icons.clearLayers();
+	portadinericons.clearLayers();
+	hlam_filter_select.selectedIndex = 0;
+	}
+	var clipboard = new Clipboard('.b_url');
+	clipboard.on('success', function(e) {
+	var btn = $(e.trigger);
+	});
+	map.on('popupopen', function(e) {
+		$(document).ready(function() {
+		$("#single_1").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_2").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_3").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_4").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_5").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_6").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_7").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_8").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_9").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_10").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_11").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_12").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_13").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_14").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_15").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_16").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_17").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_18").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_19").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_20").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_21").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_22").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_23").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_24").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_25").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_26").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_27").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_28").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_29").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_30").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_31").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_32").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_33").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_34").fancybox({helpers: {title : {type : 'float'}}});
+		$("#single_35").fancybox({helpers: {title : {type : 'float'}}});
+		});
+	});
+</script>
+<script src="scripts/LocationsIcons.js"></script>
+<script src="scripts/Objects/Locations.js"></script>
+<script src="scripts/Objects/Treasure.js"></script>
+<script src="scripts/Objects/Magazine.js"></script>
+<script src="scripts/Objects/Bobblehead.js"></script>
+<script src="scripts/Objects/CapStash.js"></script>
+<script src="scripts/Objects/PowerArmor.js"></script>
+<script src="scripts/Objects/Workbenches.js"></script>
+<script src="scripts/Objects/RandomEncounters.js"></script>
+<script src="scripts/Objects/StrangeMobs.js"></script>
+<script src="scripts/Objects/Animals.js"></script>
+<script src="scripts/Objects/Mestorojdeniya.js"></script>
+<script src="scripts/Objects/Ruda.js"></script>
+<script src="scripts/Objects/Rasteniya.js"></script>
+<script src="scripts/Objects/PortADiner.js"></script>
+<script src="scripts/CoordsSearch.js"></script>
+<script src="scripts/url-hash.js"></script>
+
+	<div style="display: none;">Интерактивная карта по игре Fallout 76. Есть локации, сокровища, места случайных встреч, месторождения, журналы, пупсы, тайники с крышками, верстаки, растения, а так же поиск точек по вашим введенным координатам."</div>
+	<div id="infookno" style="width: 700px; display: none;" data-nosnippet>
+		<img src="css/favicons/favicon-32x32.png" style="position: absolute;"></img>
+		<div id="infohead" align="center" style="padding-top: 15px;"><b>Интерактивная карта Fallout 76.</b></div>
+		<p>Есть локации, сокровища, журналы, пупсы, тайники с крышками, верстаки, места случайных встреч, месторождения (для экстракторов), рудные жилы, растения, хлам, места спавна флэтвудских монстров и молеротов, а так же поиск точек по вашим введенным координатам. При включении локаций включается строка поиска.</p>
+		<noindex><p>При нажатии ПКМ на карте - ставит маркер (возможна установка множества маркеров, при нажатии на них покажет координаты и кнопку удаления данного маркера).</p>
+		<p>Пишет код - Farget (я) (код кривой, но рабочий =D). Помогли с координатами - Гаруст и nokimaro. Помогла со скриншотами сокровищ - PPPie.</p>
+		<p>Мы, а так же еще несколько тысяч игроков Fallout 76 сидим на самом крупном русскоязычном дискорд сервере по игре Fallout 76 - <a href="https://discord.gg/jCbWbJQ" rel="nofollow" target="_blank">F76 HUB</a>. Там Вы можете найти кучу разной информации по игре, торговать с игроками и просто общаться.</p>
+		<p>Если Вам очень помогла данная карта или какой-то материал который я выкладывал в дискорде, то Вы можете поблагодарить монеткой (кнопка в правом нижнем углу) =).</p></noindex>
+	</div>
+<div id="sidebar">
+	<!-- <img src="lampi.png" alt="лампочки" style="position: absolute; top: -60px; left: -60px;"> -->
+	<div id="sidebarbutton"><input type="button" id="sb0" onclick="f_sb0()" value="►" title="Показать/скрыть панель" data-nosnippet/></div>
+	<div id="one" data-nosnippet>
+		<ul class="accordion-menu" style="border-radius: 7px; border: 1px solid #3c3c3c; box-shadow: 0 0 5px #bbb;">
+		<li>
+			<div class="dropdownlink"><i class="fa fa-home" aria-hidden="true" style="left: 15px;"></i> Основное
+				<i class="fa fa-chevron-down" aria-hidden="true"></i>
+			</div>
+			<ul class="submenuItems">
+				<div style="height: 102px;position: relative; font-family: LemonMilkRus; font-size: 10pt;">
+					<div class="text" id="text1">Локации</div>
+					<div class="text" id="text2">Сокровища</div>
+					<div class="text" id="text3">Журналы</div>
+					<div class="text" id="text4">Пупсы</div>
+					<div class="text" id="text5">Тайники с крышками</div>
+					<div class="text" id="text6">Силовая броня</div>
+					<div class="text" id="text7">Ядерные блоки</div>
+					
+					<label class="switch" id="switch1"><input type="checkbox" onchange="LocationsOnOff()" id="LocationsButton" checked="checked" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="switch2"><input type="checkbox" onchange="TreasureOnOff()" id="TreasureButton" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="switch3"><input type="checkbox" onchange="MagazineOnOff()" id="MagazineButton" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="switch4"><input type="checkbox" onchange="BobbleheadOnOff()" id="BobbleheadButton" autocomplete="off"><span class="slider"></span></label>	
+					<label class="switch" id="switch5"><input type="checkbox" onchange="CapStashOnOff()" id="CapStashButton" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="switch6"><input type="checkbox" onchange="PowerArmorOnOff()" id="PowerArmorButton" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="switch7"><input type="checkbox" onchange="FusionCoreOnOff()" id="FusionCoreButton" autocomplete="off"><span class="slider"></span></label>
+					
+					
+					<div class="b_url" data-clipboard-text="https://f76map.ru#treasure"><input type="image" src="css/images/url.png" alt="ОК" id="url1_1" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#magazine"><input type="image" src="css/images/url.png" alt="ОК" id="url1_2" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#bobblehead"><input type="image" src="css/images/url.png" alt="ОК" id="url1_3" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#capstash"><input type="image" src="css/images/url.png" alt="ОК" id="url1_4" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#powerarmor"><input type="image" src="css/images/url.png" alt="ОК" id="url1_5" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#fusioncore"><input type="image" src="css/images/url.png" alt="ОК" id="url1_6" width="12" height="12" title="Скопировать ссылку"></div>
+					
+				</div>
+			</ul>
+		</li>
+		<li>
+			<div class="dropdownlink"><i class="fa fa-hammer" aria-hidden="true" style="left: 15px;"></i> Верстаки
+				<i class="fa fa-chevron-down" aria-hidden="true"></i>
+			</div>
+			<ul class="submenuItems">
+				<div style="height: 125px;position: relative; font-family: LemonMilkRus; font-size: 10pt;">
+					<div class="text" id="wb_text1">Оружейный верстак</div>
+					<div class="text" id="wb_text2">Верстак для брони</div>
+					<div class="text" id="wb_text3">Ремонтный верстак</div>
+					<div class="text" id="wb_text4">Химлаборатория</div>
+					<div class="text" id="wb_text5">Пункт обслуживания силовой брони</div>
+					<label class="switch" id="wb_switch1"><input type="checkbox" onchange="Wb1OnOff()" id="Wb1Button" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="wb_switch2"><input type="checkbox" onchange="Wb2OnOff()" id="Wb2Button" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="wb_switch3"><input type="checkbox" onchange="Wb3OnOff()" id="Wb3Button" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="wb_switch4"><input type="checkbox" onchange="Wb4OnOff()" id="Wb4Button" autocomplete="off"><span class="slider"></span></label>	
+					<label class="switch" id="wb_switch5"><input type="checkbox" onchange="Wb5OnOff()" id="Wb5Button" autocomplete="off"><span class="slider"></span></label>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#workbench1"><input type="image" src="css/images/url.png" alt="ОК" id="wb_url_1" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#workbench2"><input type="image" src="css/images/url.png" alt="ОК" id="wb_url_2" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#workbench3"><input type="image" src="css/images/url.png" alt="ОК" id="wb_url_3" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#workbench4"><input type="image" src="css/images/url.png" alt="ОК" id="wb_url_4" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#workbench5"><input type="image" src="css/images/url.png" alt="ОК" id="wb_url_5" width="12" height="12" title="Скопировать ссылку"></div>
+				</div>
+			</ul>
+		</li>
+		<li>
+			<div class="dropdownlink"><i class="fa fa-random" aria-hidden="true"></i> Случайные встречи
+				<i class="fa fa-chevron-down" aria-hidden="true"></i>
+			</div>
+			<ul class="submenuItems">
+				<div style="height: 77px;position: relative; font-family: LemonMilkRus; font-size: 10pt;">
+					<div class="text" id="re_text1">Assault</div>
+					<div class="text" id="re_text2">Object</div>
+					<div class="text" id="re_text3">Scene</div>
+					<div class="text" id="re_text4">Travel</div>
+					<div class="text" id="re_text5">Camp</div>
+					<div class="text" id="re_text6">Mining</div>
+					
+					<label class="switch" id="re_switch1"><input type="checkbox" onchange="REAssaultOnOff()" id="REAssaultButton" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="re_switch2"><input type="checkbox" onchange="REObjectOnOff()" id="REObjectButton" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="re_switch3"><input type="checkbox" onchange="RESceneOnOff()" id="RESceneButton" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="re_switch4"><input type="checkbox" onchange="RETravelOnOff()" id="RETravelButton" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="re_switch5"><input type="checkbox" onchange="RECampOnOff()" id="RECampButton" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="re_switch6"><input type="checkbox" onchange="REMiningOnOff()" id="REMiningButton" autocomplete="off"><span class="slider"></span></label>
+					
+					<div class="re_info"><a href="random_encounters.png" target="_blank" title="Классификация случайных встреч
+		(Откроется в новой вкладке)" style="padding: 0;"><img src="css/images/icon_info.png" width="34" height="34" alt="Классификация случайных встреч"></a>
+					</div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#assault"><input type="image" src="css/images/url.png" alt="ОК" id="re_url_1" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#object"><input type="image" src="css/images/url.png" alt="ОК" id="re_url_2" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#scene"><input type="image" src="css/images/url.png" alt="ОК" id="re_url_3" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#travel"><input type="image" src="css/images/url.png" alt="ОК" id="re_url_4" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#camp"><input type="image" src="css/images/url.png" alt="ОК" id="re_url_5" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#mining"><input type="image" src="css/images/url.png" alt="ОК" id="re_url_6" width="12" height="12" title="Скопировать ссылку"></div>
+				</div>
+			</ul>
+		</li>
+		<li>
+			<div class="dropdownlink"><i class="fa fa-pastafarianism" aria-hidden="true" style="left: 14px;"></i> Монстры и животные
+				<i class="fa fa-chevron-down" aria-hidden="true"></i>
+			</div>
+			<ul class="submenuItems">
+				<div style="height: 280px; position: relative; font-family: LemonMilkRus; font-size: 10pt; overflow-y: scroll;">
+					<div class="text" id="strangemobs_text">Места спавна флэтвудского монстра<br>и молерота (спавнятся ночью)</div>
+					<label class="switch" id="strangemobs_switch"><input type="checkbox" onchange="StrangeMobsOnOff()" id="StrangeMobsButton" autocomplete="off"><span class="slider"></span></label>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#strangemobs"><input type="image" src="css/images/url.png" alt="ОК" id="url5" width="12" height="12" title="Скопировать ссылку"></div>
+					
+					<div class="text" id="animals1_text"><u>Возможные места спавна животных (шанс)</u></div>
+					<div class="text" id="animals1_1_text">Бобер</div>
+					<div class="text" id="animals1_2_text">Кошка</div>
+					<div class="text" id="animals1_3_text">Курица</div>
+					<div class="text" id="animals1_4_text">Светлячок</div>
+					<div class="text" id="animals1_5_text">Лисица</div>
+					<div class="text" id="animals1_6_text">Опоссум</div>
+					<div class="text" id="animals1_7_text">Кролик</div>
+					<div class="text" id="animals1_8_text">Лягушка</div>
+					<div class="text" id="animals1_9_text">Рад-олень</div>
+					<div class="text" id="animals1_10_text">Белка</div>
+					<label class="switch" id="animals1_1_switch"><input type="checkbox" onchange="Animals1_1OnOff()" id="Animals1_1Button" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="animals1_2_switch"><input type="checkbox" onchange="Animals1_2OnOff()" id="Animals1_2Button" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="animals1_3_switch"><input type="checkbox" onchange="Animals1_3OnOff()" id="Animals1_3Button" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="animals1_4_switch"><input type="checkbox" onchange="Animals1_4OnOff()" id="Animals1_4Button" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="animals1_5_switch"><input type="checkbox" onchange="Animals1_5OnOff()" id="Animals1_5Button" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="animals1_6_switch"><input type="checkbox" onchange="Animals1_6OnOff()" id="Animals1_6Button" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="animals1_7_switch"><input type="checkbox" onchange="Animals1_7OnOff()" id="Animals1_7Button" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="animals1_8_switch"><input type="checkbox" onchange="Animals1_8OnOff()" id="Animals1_8Button" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="animals1_9_switch"><input type="checkbox" onchange="Animals1_9OnOff()" id="Animals1_9Button" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="animals1_10_switch"><input type="checkbox" onchange="Animals1_10OnOff()" id="Animals1_10Button" autocomplete="off"><span class="slider"></span></label>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#animals1_1"><input type="image" src="css/images/url.png" alt="ОК" id="animals1_1_url" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#animals1_2"><input type="image" src="css/images/url.png" alt="ОК" id="animals1_2_url" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#animals1_3"><input type="image" src="css/images/url.png" alt="ОК" id="animals1_3_url" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#animals1_4"><input type="image" src="css/images/url.png" alt="ОК" id="animals1_4_url" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#animals1_5"><input type="image" src="css/images/url.png" alt="ОК" id="animals1_5_url" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#animals1_6"><input type="image" src="css/images/url.png" alt="ОК" id="animals1_6_url" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#animals1_7"><input type="image" src="css/images/url.png" alt="ОК" id="animals1_7_url" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#animals1_8"><input type="image" src="css/images/url.png" alt="ОК" id="animals1_8_url" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#animals1_9"><input type="image" src="css/images/url.png" alt="ОК" id="animals1_9_url" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#animals1_10"><input type="image" src="css/images/url.png" alt="ОК" id="animals1_10_url" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="text" id="animals2_text"><u>Места спавна животных</u></div>
+					<div class="text" id="animals2_1_text">Бобер</div>
+					<div class="text" id="animals2_2_text">Брамин</div>
+					<div class="text" id="animals2_3_text">Кошка</div>
+					<div class="text" id="animals2_4_text">Курица</div>
+					<div class="text" id="animals2_5_text">Светлячок</div>
+					<div class="text" id="animals2_6_text">Лисица</div>
+					<div class="text" id="animals2_7_text">Опоссум</div>
+					<div class="text" id="animals2_8_text">Кролик</div>
+					<div class="text" id="animals2_9_text">Лягушка</div>
+					<div class="text" id="animals2_10_text">Рад-олень</div>
+					<div class="text" id="animals2_11_text">Белка</div>
+					<label class="switch" id="animals2_1_switch"><input type="checkbox" onchange="Animals2_1OnOff()" id="Animals2_1Button" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="animals2_2_switch"><input type="checkbox" onchange="Animals2_2OnOff()" id="Animals2_2Button" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="animals2_3_switch"><input type="checkbox" onchange="Animals2_3OnOff()" id="Animals2_3Button" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="animals2_4_switch"><input type="checkbox" onchange="Animals2_4OnOff()" id="Animals2_4Button" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="animals2_5_switch"><input type="checkbox" onchange="Animals2_5OnOff()" id="Animals2_5Button" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="animals2_6_switch"><input type="checkbox" onchange="Animals2_6OnOff()" id="Animals2_6Button" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="animals2_7_switch"><input type="checkbox" onchange="Animals2_7OnOff()" id="Animals2_7Button" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="animals2_8_switch"><input type="checkbox" onchange="Animals2_8OnOff()" id="Animals2_8Button" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="animals2_9_switch"><input type="checkbox" onchange="Animals2_9OnOff()" id="Animals2_9Button" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="animals2_10_switch"><input type="checkbox" onchange="Animals2_10OnOff()" id="Animals2_10Button" autocomplete="off"><span class="slider"></span></label>
+					<label class="switch" id="animals2_11_switch"><input type="checkbox" onchange="Animals2_11OnOff()" id="Animals2_11Button" autocomplete="off"><span class="slider"></span></label>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#animals2_1"><input type="image" src="css/images/url.png" alt="ОК" id="animals2_1_url" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#animals2_2"><input type="image" src="css/images/url.png" alt="ОК" id="animals2_2_url" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#animals2_3"><input type="image" src="css/images/url.png" alt="ОК" id="animals2_3_url" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#animals2_4"><input type="image" src="css/images/url.png" alt="ОК" id="animals2_4_url" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#animals2_5"><input type="image" src="css/images/url.png" alt="ОК" id="animals2_5_url" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#animals2_6"><input type="image" src="css/images/url.png" alt="ОК" id="animals2_6_url" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#animals2_7"><input type="image" src="css/images/url.png" alt="ОК" id="animals2_7_url" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#animals2_8"><input type="image" src="css/images/url.png" alt="ОК" id="animals2_8_url" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#animals2_9"><input type="image" src="css/images/url.png" alt="ОК" id="animals2_9_url" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#animals2_10"><input type="image" src="css/images/url.png" alt="ОК" id="animals2_10_url" width="12" height="12" title="Скопировать ссылку"></div>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#animals2_11"><input type="image" src="css/images/url.png" alt="ОК" id="animals2_11_url" width="12" height="12" title="Скопировать ссылку"></div>
+					<div style="position: absolute; height: 5px; width: 100%; top: 347px;"></div>
+				</div>
+			</ul>
+		</li>
+		<li>
+			<div class="dropdownlink"><i class="fa fa-industry" aria-hidden="true"></i> Месторождения (для экстракторов)
+				<i class="fa fa-chevron-down" aria-hidden="true"></i>
+			</div>
+			<ul class="submenuItems">
+				<div style="height: 190px;position: relative; font-family: LemonMilkRus; font-size: 10pt;">
+					<div id="de_l"></div>
+					<div id="de_r"></div>
+				</div>
+			</ul>
+		</li>
+		<li>
+			<div class="dropdownlink"><i class="fas fa-gem" aria-hidden="true" style="left: 15px;"></i> Рудные жилы
+				<i class="fa fa-chevron-down" aria-hidden="true"></i>
+			</div>
+			<ul class="submenuItems">
+				<div style="position: relative; height: 147px; width: 408px; font-family: LemonMilkRus; font-size: 10pt;">
+					<div id="ve_l"></div>
+					<div id="ve_r"></div>
+				</div>
+			</ul>
+		</li>
+		<li>
+			<div class="dropdownlink"><i class="fas fa-seedling" aria-hidden="true"></i> Растения
+				<i class="fa fa-chevron-down" aria-hidden="true"></i>
+			</div>
+			<ul class="submenuItems">
+				<div style="position: relative; height: 280px; width: 408px; font-family: LemonMilkRus; font-size: 10pt; overflow-y: scroll;">
+					<div id="pl_l"></div>
+					<div id="pl_r"></div>
+				</div>
+			</ul>
+		</li>
+		<li>
+			<div class="dropdownlink"><i class="fas fa-cog" aria-hidden="true"></i> Хлам (без загружаемых локаций)
+				<i class="fa fa-chevron-down" aria-hidden="true"></i>
+			</div>
+			<ul class="submenuItems">
+				<div style="position: relative; height: 280px; width: 408px; font-family: LemonMilkRus; font-size: 10pt; overflow-y: scroll;">
+					<select id="hlam_filter_select" autocomplete="off" onchange="select_hlam(value)"></select>
+					<div id="box_h"></div>
+					<div id="box_h_b"></div>
+					<div id="box_h_s" style="position: absolute; left: 5px; width: 12px;"></div>
+					<script src="scripts/Objects/Hlam.js"></script>
+				</div>
+			</ul>
+		</li>
+		<li>
+			<div class="dropdownlink"><i class="fa fa-asterisk" aria-hidden="true"></i> Разное
+				<i class="fa fa-chevron-down" aria-hidden="true"></i>
+			</div>
+			<ul class="submenuItems">
+				<div style="height: 30px;position: relative; font-family: LemonMilkRus; font-size: 10pt;">
+					<div class="misc_text">Портативный обед</div>
+					<label class="switch" id="misk_switch"><input type="checkbox" onchange="PortADinerOnOff()" id="PortADinerButton" autocomplete="off"><span class="slider"></span></label>
+					<div class="b_url" data-clipboard-text="https://f76map.ru#portadiner"><input type="image" src="css/images/url.png" id="url_m_1" width="12" height="12" title="Скопировать ссылку"></div>
+				</div>
+			</ul>
+		</li>
+		</ul>
+	</div>
+	<div id="allcheckbox"><button onclick="AllCheckboxOff()" class="allcheckboxbut" title="Отключить все иконки и маркеры">Отключить все</button></div>
+	<div id="allcheckbox2"><button onclick="AllCheckboxOff2()" class="allcheckboxbut" title="Отключить все иконки (кроме локаций) и маркеры">Отключить все<br>кроме локаций</button></div>
+	<div id="pkm"><u>ПКМ</u> на карте - поставить маркер</div>
+	<div id="changemap">
+		<div><input type="button" class="image_map selected_map" id="b4" value="1"/>Стандартная карта</div>
+		<div><input type="button" class="image_map" id="b5" value="2"/>Военная карта</div>
+		<div><input type="button" class="image_map" id="b6" value="3"/>Стандартная + регионы</div>
+	</div>
+	<div class="mapinfo"><a class="fancybox" id="mapinfoid" href="#infookno"><img src="css/images/mapinfo.png" style="width: 78px;" alt=""/></a></div>
+	<div id="discord_f76hub"><a href="https://discord.gg/jCbWbJQ" rel="nofollow" target="_blank" title="Русскоязычный сервер дискорд по игре Fallout 76
+(Откроется в новой вкладке)"><img src="css/images/discord_f76hub.png" id="f76hub" onclick="f_f76hub()"/></a></div>
+	<button id="coords_box" onclick="coords_box_show()" title="Включить панель поиска по координатам"><i class="fas fa-map-marked-alt" style="position: absolute; top: 7px; left: 15px;"></i>Включить панель поиска по координатам</button>
+</div>
+<div id="donat" style="width: 500px;display: none;" data-nosnippet>
+	<h3 style="text-align: center">Тут можно поблагодарить монеткой =)</h3>
+	<p>Здравствуйте пользователи данного сайта, карту я сделал и пока еще продолжаю как-то развивать лишь благодаря своему собственному желанию, мне интересно работать над ней, пусть даже у меня очень слабые знания в html/css/js, но все же я стараюсь сделать ее такой чтобы ей пользовалось как можно больше игроков.</p>
+	<p>Спасибо за вашу поддержку, приятно знать что этот сайт кому-то оказался полезным. По мере возможности постараюсь следить за данными и обновлять если потребуется.</p>
+	<div style="text-align: center; margin-top: 20px;">
+	<div><b>ЮMoney (Бывший Yandex кошелек)</b></div><br>
+	<iframe src="https://yoomoney.ru/quickpay/fundraise/button?billNumber=EdLggwQ4iDU.230725&" width="237" height="50" frameborder="0" allowtransparency="true" scrolling="no"></iframe>
+	</div>
+</div>
+<a class="fancybox" id="donat0" href="#donat" title=""><img src="donat3.png" style="position: absolute; right: 5px; bottom: 5px; width: 50px; z-index: 400;" alt=""/></a>
+<div id="coords_fullbox" data-nosnippet>
+	<i class="fas fa-arrows-alt" style="position: absolute; top: 5px; left: 5px; color: #ffffff;"></i>
+	<div style="position: absolute; top: 8px; left: 35px; color: #ffffff; font-family: LemonMilkRus; font-size: 9pt;">Перемещаемая панель</div>
+	<div id="coords_fullbox2">
+		<div id="searchX">X: <input type="text" maxlength="14" name="lng" id="lng"/></div>
+		<div id="searchY">Y: <input type="text" maxlength="14" name="lat" id="lat"/></div>
+		<div id="searchB1" title="Найти точку и поставить маркер по введенным координатам
+(Другие маркеры будут удалены)"><input type="button" id="b1" onclick="but1()" value="Найти точку"/></div>
+		<div id="searchB2" title="Найти точку и поставить маркер по введенным координатам
+(Другие маркеры не будут удалены)"><input type="button" id="b2" onclick="but2()" value="Найти точку&#13;&#10;(без удаления других)"/></div>
+		<div id="searchB3" title="Удалить все маркеры с карты"><input type="button" id="b3" onclick="but3()" value="Удалить маркеры"/></div>
+		<div style="position: absolute; left: 185px; height: 165px; width: 5px; background-color: #3c3c3c;"></div>
+		<div style="position: absolute; left: 200px;"><b>Ввод набора координат</b><br><div style="font-size: 9pt;">Формат координат <b>[ Y , X ]</b>,[Y,X],[Y,X],[Y,X] (и т.д.)<br>Пример: [-168911, -13968], [-71798, 170232], [-119159, 195138]<br>Пробелы, табуляция и переносы строк не влияют.</div></div>
+		<textarea style="position: absolute; top: 60px; left: 200px; height: 98px; min-width: 300px; max-width: 300px; font-size: 10pt;" id="t01"></textarea>
+		<button id="coords" onclick="MarkersSet()">Отметить все точки на карте</button>
+		<button id="coords_del" onclick="MarkersDel()">Удалить точки</button>
+		<div id="coords_close" onclick="coords_box_hide()"><b>[закрыть]</b></div>
+		<div style="position: absolute; left: 585px; top: 40px; text-align: center; font-family: LemonMilkRus; font-size: 9pt;">Иконки<br>точек</div>
+		<input id="coords_icon1" name="coords_icon" type="radio" value="1" checked>
+		<div style="position: absolute; top: 82px; left: 610px; height: 18px; width: 18px; border-radius: 50%; box-shadow: 0 0 0 3px #ffff00; filter:  drop-shadow(0px 0px 3px #d3d3d3) drop-shadow(0px 0px 3px #d3d3d3) drop-shadow(0px 0px 3px #d3d3d3);"></div>
+		<input id="coords_icon2" name="coords_icon" type="radio" value="2">
+		<img src="css/images/marker-icon.png" style="position: absolute; top: 120px; left: 610px; height: 35px; filter:  drop-shadow(0px 0px 3px #d3d3d3) drop-shadow(0px 0px 3px #d3d3d3) drop-shadow(0px 0px 3px #d3d3d3);"></img>
+	</div>
+</div>
+<script>
+$('.image_map').click(function(){
+	$('.image_map').removeClass('selected_map');
+	$(this).addClass('selected_map');
+	map.removeLayer(image);
+	if ($('.selected_map').val() == 1) {image = L.imageOverlay('css/images/map1.jpg', bounds).addTo(map);};
+	if ($('.selected_map').val() == 2) {image = L.imageOverlay('css/images/map2.jpg', bounds).addTo(map);};
+	if ($('.selected_map').val() == 3) {image = L.imageOverlay('css/images/map3.jpg', bounds).addTo(map);};
+});
+let veins = [
+['Алюминиевая жила','#vein1','Vein1'],
+['Железная жила','#vein2','Vein2'],
+['Жила кристаллов','#vein3','Vein3'],
+['Жила черного титана','#vein4','Vein4'],
+['Жила ультрацита','#vein5','Vein5'],
+['Золотая жила','#vein6','Vein6'],
+['Медная жила','#vein7','Vein7'],
+['Свинцовая жила','#vein8','Vein8'],
+['Серебряная жила','#vein9','Vein9'],
+['Угольная жила','#vein10','Vein10'],
+['Урановая жила','#vein11','Vein11']
+];
+$.each(veins, function (i) {
+	if (i<6) {
+		$('<div>', {class: 'vein', id: 've_'+[i+1]}).appendTo('#ve_l');
+		$('<div class="b_url" style="float: left; padding-right: 5px;" data-clipboard-text="https://f76map.ru'+veins[i][1]+'"><input type="image" src="css/images/url.png" width="12" height="12" title="Скопировать ссылку"></div>').appendTo('#ve_'+[i+1]);
+		$('<div>', {class: 've_t', text: veins[i][0]}).css('float', 'left').appendTo('#ve_'+[i+1]);
+		$('<label class="switch ve_b" style="float: right; position: relative;"><input type="checkbox" onchange="'+veins[i][2]+'OnOff()" id="'+veins[i][2]+'Button" autocomplete="off"><span class="slider"></span></label>').appendTo('#ve_'+[i+1]);
+	} else {
+		$('<div>', {class: 'vein', id: 've_'+[i+1]}).appendTo('#ve_r');
+		$('<div class="b_url" style="float: left; padding-right: 5px;" data-clipboard-text="https://f76map.ru'+veins[i][1]+'"><input type="image" src="css/images/url.png" width="12" height="12" title="Скопировать ссылку"></div>').appendTo('#ve_'+[i+1]);
+		$('<div>', {class: 've_t', text: veins[i][0]}).css('float', 'left').appendTo('#ve_'+[i+1]);
+		$('<label class="switch ve_b" style="float: right; position: relative;"><input type="checkbox" onchange="'+veins[i][2]+'OnOff()" id="'+veins[i][2]+'Button" autocomplete="off"><span class="slider"></span></label>').appendTo('#ve_'+[i+1]);
+	}
+});
+let deposits = [
+['Медь','#medy','Medy'],
+['Хлам','#hlam','Hlam'],
+['Уголь','#ugoly','Ugoly'],
+['Бетон','#beton','Beton'],
+['Масло','#maslo','Maslo'],
+['Золото','#zoloto','Zoloto'],
+['Железо','#jelezo','Jelezo'],
+['Свинец','#svinec','Svinec'],
+['Серебро','#serebro','Serebro'],
+['Кислота','#kislota','Kislota'],
+['Удобрение','#udobrenie','Udobrenie'],
+['Алюминий','#aluminiy','Aluminiy'],
+['Кристаллы','#kristalli','Kristalli'],
+['Черный титан','#chorniytitan','ChorniyTitan'],
+['Ядерный материал','#yaderniymaterial','YaderniyMaterial']
+];
+$.each(deposits, function (i) {
+	if (i<8) {
+		$('<div>', {class: 'deposit', id: 'de_'+[i+1]}).appendTo('#de_l');
+		$('<div class="b_url" style="float: left; padding-right: 10px;" data-clipboard-text="https://f76map.ru'+deposits[i][1]+'"><input type="image" src="css/images/url.png" width="12" height="12" title="Скопировать ссылку"></div>').appendTo('#de_'+[i+1]);
+		$('<div>', {class: 'de_t', text: deposits[i][0]}).css('float', 'left').appendTo('#de_'+[i+1]);
+		$('<label class="switch de_b" style="float: right; position: relative;"><input type="checkbox" onchange="'+deposits[i][2]+'OnOff()" id="'+deposits[i][2]+'Button" autocomplete="off"><span class="slider"></span></label>').appendTo('#de_'+[i+1]);
+	} else {
+		$('<div>', {class: 'deposit', id: 'de_'+[i+1]}).appendTo('#de_r');
+		$('<div class="b_url" style="float: left; padding-right: 10px;" data-clipboard-text="https://f76map.ru'+deposits[i][1]+'"><input type="image" src="css/images/url.png" width="12" height="12" title="Скопировать ссылку"></div>').appendTo('#de_'+[i+1]);
+		$('<div>', {class: 'de_t', text: deposits[i][0]}).css('float', 'left').appendTo('#de_'+[i+1]);
+		$('<label class="switch de_b" style="float: right; position: relative;"><input type="checkbox" onchange="'+deposits[i][2]+'OnOff()" id="'+deposits[i][2]+'Button" autocomplete="off"><span class="slider"></span></label>').appendTo('#de_'+[i+1]);
+	}
+});
+let plants = [
+	['Гриб','#grib','Grib'],
+	['Арбуз','#arbuz','Arbuz'],
+	['Астра','#astra','Astra'],
+	['Тошка','#toshka','Toshka'],
+	['Тыква (Тип 1)','#tyikva','Tyikva'],
+	['Тыква (Тип 2)','#tyikva2','Tyikva2'],
+	['Клюква','#klukva','Klukva'],
+	['Морковь','#morkovy','Morkovy'],
+	['Ежевика','#ejevika','Ejevika'],
+	['Кукуруза','#kukuruza','Kukuruza'],
+	['Лихоцвет','#lihocvet','Lihocvet'],
+	['Илофасоль','#ilofasoly','Ilofasoly'],
+	['Кроволист','#krovolist','Krovolist'],
+	['Мозгогриб','#mozgogrib','Mozgogrib'],
+	['Мутафрукт','#mutafrukt','Mutafrukt'],
+	['Пеплоцвет','#peplocvet','Peplocvet'],
+	['Смоляника','#smolyanika','Smolyanika'],
+	['Хвостолом','#hvostolom','Hvostolom'],
+	['Бритвозлак','#britvozlak','Britvozlak'],
+	['Грязноцвет','#gryaznocvet','Gryaznocvet'],
+	['Рододендрон','#rododendron','Rododendron'],
+	['Чертополох','#chertopoloh','Chertopoloh'],
+	['Ночной ползун','#nochnoypolzun','NochnoyPolzun'],
+	['Нутряной гриб','#nutryanoygrib','NutryanoyGrib'],
+	['Огненный гриб','#ognenniygrib','OgnenniyGrib'],
+	['Яйцо молерота','#yaycomolerota','YaycoMolerota'],
+	['Пепельная роза','#pepelynayaroza','PepelynayaRoza'],
+	['Ягода-хлопушка','#yagodahlopushka','YagodaHlopushka'],
+	['Корень женьшеня','#korenyjenyshenya','KorenyJenyshenya'],
+	['Светящийся гриб','#svetgrib','SvetGrib'],
+	['Цветок душителя','#cvetokdushitelya','CvetokDushitelya'],
+	['Светящаяся смола','#svetsmola','SvetSmola'],
+	['Зараженная клюква','#zarajklukva','ZarajKlukva'],
+	['Папоротник-мутант','#paporotnik','Paporotnik'],
+	['Обесцвеченный кизил','#kizil','Kizil'],
+	['Цветок дикой тошки','#cvetoktoshki','CvetokToshki'],
+	['Цветок дикой тыквы','#cvetoktyikvyi','CvetokTyikvyi'],
+	['Цветок дикого арбуза','#cvetokarbuza','CvetokArbuza'],
+	['Цветок дикой моркови','#cvetokmorkovi','CvetokMorkovi'],
+	['Гигантский хищнолист','#hischnolist','Hischnolist']
+];
+$.each(plants, function (i) {
+	if (i<20) {
+		$('<div>', {class: 'plant', id: 'pl_'+[i+1]}).appendTo('#pl_l');
+		$('<div class="b_url" style="float: left; padding-right: 5px;" data-clipboard-text="https://f76map.ru'+plants[i][1]+'"><input type="image" src="css/images/url.png" width="12" height="12" title="Скопировать ссылку"></div>').appendTo('#pl_'+[i+1]);
+		$('<div>', {class: 'pl_t', text: plants[i][0]}).css('float', 'left').appendTo('#pl_'+[i+1]);
+		$('<label class="switch pl_b" style="float: right; position: relative;"><input type="checkbox" onchange="'+plants[i][2]+'OnOff()" id="'+plants[i][2]+'Button" autocomplete="off"><span class="slider"></span></label>').appendTo('#pl_'+[i+1]);
+	} else {
+		$('<div>', {class: 'plant', id: 'pl_'+[i+1]}).appendTo('#pl_r');
+		$('<div class="b_url" style="float: left; padding-right: 5px;" data-clipboard-text="https://f76map.ru'+plants[i][1]+'"><input type="image" src="css/images/url.png" width="12" height="12" title="Скопировать ссылку"></div>').appendTo('#pl_'+[i+1]);
+		$('<div>', {class: 'pl_t', text: plants[i][0]}).css('float', 'left').appendTo('#pl_'+[i+1]);
+		$('<label class="switch pl_b" style="float: right; position: relative;"><input type="checkbox" onchange="'+plants[i][2]+'OnOff()" id="'+plants[i][2]+'Button" autocomplete="off"><span class="slider"></span></label>').appendTo('#pl_'+[i+1]);
+	}
+});
+</script>
+<script>
+$('#coords_fullbox').draggable({containment: "body", cancel: '#coords_fullbox2'});
+$('.fancybox').fancybox();
+LocationsOnOff();
+setTimeout(urlhash, 1000);
+</script>
+<!-- новогодняя гирлянда -->
+<!-- <div class="b-page_newyear"> -->
+    <!-- <div class="b-page__content"> -->
+        <!-- <i class="b-head-decor"> -->
+      <!-- <i class="b-head-decor__inner b-head-decor__inner_n1"> -->
+        <!-- <div class="b-ball b-ball_n1 b-ball_bounce" data-note="0"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n2 b-ball_bounce" data-note="1"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n3 b-ball_bounce" data-note="2"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n4 b-ball_bounce" data-note="3"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n5 b-ball_bounce" data-note="4"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n6 b-ball_bounce" data-note="5"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n7 b-ball_bounce" data-note="6"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n8 b-ball_bounce" data-note="7"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n9 b-ball_bounce" data-note="8"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i1"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i2"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i3"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i4"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i5"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i6"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- </i> -->
+            <!-- <i class="b-head-decor__inner b-head-decor__inner_n2"> -->
+        <!-- <div class="b-ball b-ball_n1 b-ball_bounce" data-note="9"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n2 b-ball_bounce" data-note="10"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n3 b-ball_bounce" data-note="11"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n4 b-ball_bounce" data-note="12"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n5 b-ball_bounce" data-note="13"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n6 b-ball_bounce" data-note="14"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n7 b-ball_bounce" data-note="15"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n8 b-ball_bounce" data-note="16"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n9 b-ball_bounce" data-note="17"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i1"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i2"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i3"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i4"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i5"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i6"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+      <!-- </i> -->
+            <!-- <i class="b-head-decor__inner b-head-decor__inner_n3"> -->
+        <!-- <div class="b-ball b-ball_n1 b-ball_bounce" data-note="18"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n2 b-ball_bounce" data-note="19"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n3 b-ball_bounce" data-note="20"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n4 b-ball_bounce" data-note="21"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n5 b-ball_bounce" data-note="22"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n6 b-ball_bounce" data-note="23"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n7 b-ball_bounce" data-note="24"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n8 b-ball_bounce" data-note="25"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n9 b-ball_bounce" data-note="26"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i1"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i2"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i3"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i4"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i5"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i6"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+      <!-- </i> -->
+            <!-- <i class="b-head-decor__inner b-head-decor__inner_n4"> -->
+        <!-- <div class="b-ball b-ball_n1 b-ball_bounce" data-note="27"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n2 b-ball_bounce" data-note="28"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n3 b-ball_bounce" data-note="29"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n4 b-ball_bounce" data-note="30"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n5 b-ball_bounce" data-note="31"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n6 b-ball_bounce" data-note="32"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n7 b-ball_bounce" data-note="33"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n8 b-ball_bounce" data-note="34"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n9 b-ball_bounce" data-note="35"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i1"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i2"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i3"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i4"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i5"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i6"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+      <!-- </i> -->
+            <!-- <i class="b-head-decor__inner b-head-decor__inner_n5"> -->
+        <!-- <div class="b-ball b-ball_n1 b-ball_bounce" data-note="0"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n2 b-ball_bounce" data-note="1"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n3 b-ball_bounce" data-note="2"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n4 b-ball_bounce" data-note="3"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n5 b-ball_bounce" data-note="4"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n6 b-ball_bounce" data-note="5"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n7 b-ball_bounce" data-note="6"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n8 b-ball_bounce" data-note="7"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n9 b-ball_bounce" data-note="8"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i1"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i2"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i3"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i4"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i5"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i6"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+      <!-- </i> -->
+            <!-- <i class="b-head-decor__inner b-head-decor__inner_n6"> -->
+        <!-- <div class="b-ball b-ball_n1 b-ball_bounce" data-note="9"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n2 b-ball_bounce" data-note="10"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n3 b-ball_bounce" data-note="11"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n4 b-ball_bounce" data-note="12"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n5 b-ball_bounce" data-note="13"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n6 b-ball_bounce" data-note="14"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n7 b-ball_bounce" data-note="15"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n8 b-ball_bounce" data-note="16"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n9 b-ball_bounce" data-note="17"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i1"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i2"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i3"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i4"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i5"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i6"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+      <!-- </i> -->
+            <!-- <i class="b-head-decor__inner b-head-decor__inner_n7"> -->
+        <!-- <div class="b-ball b-ball_n1 b-ball_bounce" data-note="18"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n2 b-ball_bounce" data-note="19"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n3 b-ball_bounce" data-note="20"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n4 b-ball_bounce" data-note="21"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n5 b-ball_bounce" data-note="22"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n6 b-ball_bounce" data-note="23"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n7 b-ball_bounce" data-note="24"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n8 b-ball_bounce" data-note="25"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_n9 b-ball_bounce" data-note="26"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i1"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i2"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i3"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i4"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i5"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+        <!-- <div class="b-ball b-ball_i6"><div class="b-ball__right"></div><div class="b-ball__i"></div></div> -->
+      <!-- </i> -->
+        <!-- </i> -->
+    <!-- </div> -->
+<!-- </div> -->
+
+</body>
+</html>
