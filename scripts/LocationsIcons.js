@@ -109,7 +109,7 @@
 	var VaultMarker = L.icon({iconUrl: 'css/images/VaultMarker.png',	iconSize: [30, 28],	iconAnchor: [14, 15],	popupAnchor: [0, -15],	tooltipAnchor: [0, -15]});
 	var WhitespringResort = L.icon({iconUrl: 'css/images/WhitespringResort.png',	iconSize: [37, 29],	iconAnchor: [18, 15],	popupAnchor: [0, -15],	tooltipAnchor: [0, -15]});
 	var WoodShackMarker = L.icon({iconUrl: 'css/images/WoodShackMarker.png',	iconSize: [27, 25],	iconAnchor: [12, 14],	popupAnchor: [0, -14],	tooltipAnchor: [0, -14]});
-	var WorkshopMarker = L.icon({iconUrl: 'css/images/WorkshopMarker.png',	iconSize: [27, 25],	iconAnchor: [12, 14],	popupAnchor: [0, -14],	tooltipAnchor: [0, -14]});
+	var WorkshopMarker = L.icon({iconUrl: 'css/images/WorkshopMarker.png',	iconSize: [24, 24],	iconAnchor: [11, 13],	popupAnchor: [0, -13],	tooltipAnchor: [0, -13]});
 	
 	var icon_random1 = L.icon({iconUrl: 'css/images/icon_random1.png',	iconSize: [21, 21],	iconAnchor: [10, 10],	popupAnchor: [0, -10],	tooltipAnchor: [0, -10]});
 	var icon_random2 = L.icon({iconUrl: 'css/images/icon_random2.png',	iconSize: [21, 21],	iconAnchor: [10, 10],	popupAnchor: [0, -10],	tooltipAnchor: [0, -10]});
